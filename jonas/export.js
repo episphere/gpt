@@ -19,6 +19,10 @@ function check4key(){
     // delete localStorage.GPT_API_key // if this machine cannot be trusted with a persistent API key
 }
 
+async function send(txt){ // to GPT
+    // ...
+}
+
 check4key()
 
 export{
