@@ -1,13 +1,13 @@
 // importing only the authentication bit of export.js
 
-import { key, check4key as check_key } from "./export.js";
+import { key, check4key } from "./export.js";
 
-function double(x){
-    return 2*x
-}
+// Note export.js runs check3key automatically. 
+// Look for the line with:
+
+heck4key() 
 
 export{
     key,
-    check_key,
-    double
+    //check4key
 }
