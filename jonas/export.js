@@ -1,4 +1,6 @@
 // exploring GPT APIs
+// documentation: https://platform.openai.com/docs/api-reference/making-requests?lang=curl
+// convert curl to fetch: https://www.scrapingbee.com/curl-converter/javascript-fetch
 
 console.log('jonas/export.js imported')
 
@@ -26,9 +28,26 @@ function check4key(k){
         
 }
 
-async function send(url='https://api.openai.com/v1/models',opt={headers:{'Authorization':`Bearer ${key}`}}){ // list of models by default
-    return await (await fetch('https://api.openai.com/v1/models',{headers:{'Authorization':`Bearer ${mod.key}`}})).json()
-    // ...
+async function completions(model='gpt-3.5-turbo-0301',content='Say this is a test!',role='user',temperature=0.7){
+    return await 
+        (await fetch(`https://api.openai.com/v1/chat/completions`,
+             {
+                 method:'POST',
+                 headers:{
+                     'Authorization':`Bearer ${key}`,
+                     'Content-Type': 'application/json',
+                 },
+                 body:JSON.stringify({
+                     model:model,
+                     messages:[
+                         {
+                             role:role,
+                             content:content
+                         }
+                     ]
+                 })
+             })
+         ).json()
 }
 
 async function listModels(){
@@ -38,8 +57,50 @@ async function listModels(){
     return models    
 }
 
-async function retrieveModel(){
-    return await (await fetch('https://api.openai.com/v1/models',{headers:{'Authorization':`Bearer ${key}`}})).json()
+async function retrieveModel(model='gpt-3.5-turbo-0301'){
+    return await (await fetch(`https://api.openai.com/v1/models/${model}`,{headers:{'Authorization':`Bearer ${key}`}})).json()
+}
+
+async function chatUI(div){ // cerate a simple chat div
+    if(!div){
+        div = document.createElement('div')
+        document.body.appendChild(div)
+    }
+    if(typeof(div)=='string'){
+        div = document.getElementById(div)
+    }
+    div.innerHTML='<h3>A simple OpenAI Chat</h3>'
+    let ta = document.createElement('textarea')
+    div.appendChild(ta)
+    ta.style.width="100%"
+    ta.style.height='10em'
+    let count=0
+    ta.onkeyup=async function(evt){
+        if((evt.key=='Enter')&&(evt.shiftKey==false)){
+            console.log('-------\nPrompt:\n-------\n'+ta.value)
+            let prompt = ta.value
+            ta.focus()
+            ta.value=''
+            let promptDiv = document.createElement('div')
+            //divDialog.appendChild(promptDiv)
+            divDialog.prepend(promptDiv)
+            promptDiv.classList.add("promptDiv")
+            count++
+            promptDiv.innerHTML=`${count}) ${prompt}`
+            promptDiv.style.backgroundColor='lightgray'
+            promptDiv.style.color='maroon'
+            let responseDiv = document.createElement('div')
+            //divDialog.appendChild(responseDiv)
+            divDialog.prepend(responseDiv)
+            responseDiv.innerHTML='...'
+            completions('gpt-3.5-turbo-0301',prompt).then(x=>{
+                responseDiv.innerHTML=x.choices[0].message.content
+            })
+            
+        }
+    }
+    let divDialog = document.createElement('div')
+    div.appendChild(divDialog)
 }
 
 check4key() // checking for a key by default
@@ -48,7 +109,9 @@ export{
     hello,
     key,
     check4key,
+    completions,
     listModels,
+    retrieveModel,
     models,
-    send
+    chatUI
 }

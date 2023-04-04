@@ -1,21 +1,27 @@
-<link href="https://episphere.github.io/gps/obs.css" rel="stylesheet">
-<div style="font-size:large;font-family:Verdana;font-style:italic">
-    <button onclick="location.href='..'">root</button>
-    <button onclick="window.open('https://github.com/episphere/gpt/tree/main/jonas')">code</button>
-    <br>mod = await import('https://episphere.github.io/gpt/jonas/export.js')
-</div>
-<script>
-    import('../../gpt/jonas/export.js').then(m=>{mod=m})
-    // the same thing using async:
-    // (async _=>{mod = await import('../../gpt/jonas/export.js')})()  
+<head>
+    <link href="https://episphere.github.io/gps/gps.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div style="font-size:large;font-family:Verdana;font-style:italic">
+        <button onclick="location.href='..'">root</button>
+        <button onclick="window.open('https://github.com/episphere/gpt/tree/main/jonas')">code</button>
+        <br>mod = await import('https://episphere.github.io/gpt/jonas/export.js')
+    </div>
+    <script>
+        //import('../../gpt/jonas/export.js').then(m=>{mod=m})
+        import('../../gpt/jonas/export.js').then(m=>{mod=m;mod.chatUI()})
+        // the same thing using async:
+        // (async _=>{mod = await import('../../gpt/jonas/export.js')})()  
+        
+    </script>
+    <hr>
     
-</script>
-<hr>
-
-<h3>Things to try:</h3>
-<ol>
-    <li>Authentication with prompt: <code>mod.check4key()</code></li>
-    <li>Static import example: <code>import { key, check4key } from "./export.js"</code>.</li>
-    <li>Example of static import to take care of <a href="https://github.com/episphere/gpt/blob/main/jonas/auth.js" target="_blank">auth.js</a>.</li>
-    <li>...</li>
-</ol>
+    <h3>Things to try:</h3>
+    <ol>
+        <li>Authentication with prompt: <code>mod.check4key()</code></li>
+        <li>Static import example: <code>import { key, check4key } from "./export.js"</code>.</li>
+        <li>Example of static import to take care of <a href="https://github.com/episphere/gpt/blob/main/jonas/auth.js" target="_blank">auth.js</a>.</li>
+        <li>...</li>
+    </ol>
+</body>
