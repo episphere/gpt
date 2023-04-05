@@ -69,15 +69,54 @@ async function chatUI(div){ // cerate a simple chat div
     if(typeof(div)=='string'){
         div = document.getElementById(div)
     }
-    div.innerHTML='<h3>A simple OpenAI Chat</h3>'
+    function txt2html(txt){
+        if(txt[0]=='<'){ // html
+            return txt
+        }else{
+            return '<p>'+txt.replaceAll('\n','<br>')+'</p>'
+        }
+    }
+    div.innerHTML='<h3>A simple OpenAI Chat</h3>Model, Role and temperature (<span id="temperatureValue">0.7</span>).'
+    // select model
+    let selectModel=document.createElement('select')
+    await listModels()
+    models.data.forEach(m=>{
+        let opt = document.createElement('option')
+        selectModel.appendChild(opt)
+        opt.value=m.id
+        opt.textContent=m.id
+    })
+    selectModel.value='gpt-3.5-turbo-0301'
+    div.appendChild(selectModel)
+    // select role
+    let selectRole=document.createElement('select')
+    div.appendChild(selectRole);
+    ['system','user','assistant'].forEach(r=>{
+        let opt = document.createElement('option')
+        selectRole.appendChild(opt)
+        opt.value=r
+        opt.textContent=r
+    })
+    selectRole.value='user'
+    // set temperature
+    let rangeTemperature=document.createElement('input')
+    rangeTemperature.type='range'
+    rangeTemperature.min=0
+    rangeTemperature.max=1
+    rangeTemperature.step=0.01
+    rangeTemperature.value=0.7
+    rangeTemperature.onchange=()=>{
+        document.getElementById('temperatureValue').textContent=rangeTemperature.value
+    }
+    div.appendChild(rangeTemperature);
     let ta = document.createElement('textarea')
     div.appendChild(ta)
     ta.style.width="100%"
-    ta.style.height='10em'
+    ta.style.height='5em'
     let count=0
     ta.onkeyup=async function(evt){
         if((evt.key=='Enter')&&(evt.shiftKey==false)){
-            console.log('-------\nPrompt:\n-------\n'+ta.value)
+            console.log('=======\nPrompt:\n-------\n'+ta.value)
             let prompt = ta.value
             ta.focus()
             ta.value=''
@@ -93,8 +132,9 @@ async function chatUI(div){ // cerate a simple chat div
             //divDialog.appendChild(responseDiv)
             divDialog.prepend(responseDiv)
             responseDiv.innerHTML='...'
-            completions('gpt-3.5-turbo-0301',prompt).then(x=>{
-                responseDiv.innerHTML=x.choices[0].message.content
+            completions('gpt-3.5-turbo-0301',prompt,selectRole.value,rangeTemperature.value).then(x=>{
+                responseDiv.innerHTML=txt2html(x.choices[0].message.content)
+                console.log('=======\nReply:\n-------\n'+x.choices[0].message.content)
             })
             
         }
