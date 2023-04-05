@@ -141,6 +141,7 @@ async function chatUI(div){ // cerate a simple chat div
     }
     let divDialog = document.createElement('div')
     div.appendChild(divDialog)
+    return div
 }
 
 check4key() // checking for a key by default
