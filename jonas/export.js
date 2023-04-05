@@ -132,7 +132,7 @@ async function chatUI(div){ // cerate a simple chat div
             //divDialog.appendChild(responseDiv)
             divDialog.prepend(responseDiv)
             responseDiv.innerHTML='...'
-            completions(prompt,'selectModel.value',selectRole.value,rangeTemperature.value).then(x=>{
+            completions(prompt,selectModel.value,selectRole.value,rangeTemperature.value).then(x=>{
                 responseDiv.innerHTML=txt2html(x.choices[0].message.content)
                 console.log('-------\nReply:\n\n'+x.choices[0].message.content)
             })
