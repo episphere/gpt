@@ -28,7 +28,7 @@ function check4key(k){
         
 }
 
-async function completions(model='gpt-3.5-turbo-0301',content='Say this is a test!',role='user',temperature=0.7){
+async function completions(content='Say this is a test!',model='gpt-3.5-turbo-0301',role='user',temperature=0.7){
     return await 
         (await fetch(`https://api.openai.com/v1/chat/completions`,
              {
@@ -76,7 +76,7 @@ async function chatUI(div){ // cerate a simple chat div
             return '<p>'+txt.replaceAll('\n','<br>')+'</p>'
         }
     }
-    div.innerHTML='<h3>A simple OpenAI Chat</h3>Model, Role and temperature (<span id="temperatureValue">0.7</span>).'
+    div.innerHTML='<h3>A simple OpenAI Chat</h3>Model, Role and temperature (<span id="temperatureValue">0.7</span>).<br>'
     // select model
     let selectModel=document.createElement('select')
     await listModels()
@@ -116,7 +116,7 @@ async function chatUI(div){ // cerate a simple chat div
     let count=0
     ta.onkeyup=async function(evt){
         if((evt.key=='Enter')&&(evt.shiftKey==false)){
-            console.log('=======\nPrompt:\n-------\n'+ta.value)
+            console.log('-------\nPrompt:\n\n'+ta.value)
             let prompt = ta.value
             ta.focus()
             ta.value=''
@@ -132,9 +132,9 @@ async function chatUI(div){ // cerate a simple chat div
             //divDialog.appendChild(responseDiv)
             divDialog.prepend(responseDiv)
             responseDiv.innerHTML='...'
-            completions('gpt-3.5-turbo-0301',prompt,selectRole.value,rangeTemperature.value).then(x=>{
+            completions(prompt,'selectModel.value',selectRole.value,rangeTemperature.value).then(x=>{
                 responseDiv.innerHTML=txt2html(x.choices[0].message.content)
-                console.log('=======\nReply:\n-------\n'+x.choices[0].message.content)
+                console.log('-------\nReply:\n\n'+x.choices[0].message.content)
             })
             
         }
