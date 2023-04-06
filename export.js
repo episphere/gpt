@@ -105,10 +105,10 @@ async function chatUI(div){ // cerate a simple chat div
     rangeTemperature.max=1
     rangeTemperature.step=0.01
     rangeTemperature.value=0.7
-    rangeTemperature.onchange=()=>{
-        div.getElementById('temperatureValue').textContent=rangeTemperature.value
-    }
     div.appendChild(rangeTemperature);
+    rangeTemperature.onchange=()=>{
+        div.querySelector('#temperatureValue').textContent=rangeTemperature.value
+    }
     let ta = document.createElement('textarea')
     div.appendChild(ta)
     ta.style.width="100%"
@@ -125,14 +125,18 @@ async function chatUI(div){ // cerate a simple chat div
             divDialog.prepend(promptDiv)
             promptDiv.classList.add("promptDiv")
             count++
-            promptDiv.innerHTML=`${count}) ${prompt}`
+            promptDiv.innerHTML=`<span style="color:darkgreen;background-color:yellow;cursor:pointer" id="copySpan">${count})</span> ${prompt}`
             promptDiv.style.backgroundColor='lightgray'
             promptDiv.style.color='maroon'
+            promptDiv.querySelector('#copySpan').onclick=function(){
+                this.parentElement.parentElement.parentElement.querySelector('textarea').value = prompt
+            }
             let responseDiv = document.createElement('div')
             //divDialog.appendChild(responseDiv)
             divDialog.prepend(responseDiv)
             responseDiv.innerHTML='...'
             completions(prompt,selectModel.value,selectRole.value,rangeTemperature.value).then(x=>{
+                //console.log([prompt,selectModel.value,selectRole.value,rangeTemperature.value])
                 responseDiv.innerHTML=txt2html(x.choices[0].message.content)
                 console.log('-------\nReply:\n\n'+x.choices[0].message.content)
             })
