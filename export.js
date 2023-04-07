@@ -113,6 +113,7 @@ async function chatUI(div){ // cerate a simple chat div
     div.appendChild(ta)
     ta.style.width="100%"
     ta.style.height='5em'
+    ta.style.color='blue'
     let count=0
     ta.onkeyup=async function(evt){
         if((evt.key=='Enter')&&(evt.shiftKey==false)){
@@ -125,11 +126,16 @@ async function chatUI(div){ // cerate a simple chat div
             divDialog.prepend(promptDiv)
             promptDiv.classList.add("promptDiv")
             count++
-            promptDiv.innerHTML=`<span style="color:darkgreen;background-color:yellow;cursor:pointer" id="copySpan">${count})</span> ${prompt}`
+            promptDiv.innerHTML=`<span style="color:darkgreen;background-color:yellow;cursor:pointer" id="copySpan">${count})</span> ${prompt} <span style='color:red;background-color:yellow;cursor:pointer' id="removeQA">[remove]</span>`
             promptDiv.style.backgroundColor='lightgray'
-            promptDiv.style.color='maroon'
+            promptDiv.style.color='blue'
             promptDiv.querySelector('#copySpan').onclick=function(){
                 this.parentElement.parentElement.parentElement.querySelector('textarea').value = prompt
+            }
+            promptDiv.querySelector('#removeQA').onclick=async function(){
+                await this.parentElement.parentElement.childNodes[count-1].remove();
+                await this.parentElement.parentElement.childNodes[count-1].remove();
+                count--
             }
             let responseDiv = document.createElement('div')
             //divDialog.appendChild(responseDiv)
