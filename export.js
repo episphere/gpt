@@ -28,7 +28,7 @@ function check4key(k){
         
 }
 
-async function completions(content='Say this is a test!',model='gpt-3.5-turbo-0301',role='user',temperature=0.7){
+async function completions(content='Say this is a test!',model='gpt-3.5-turbo',role='user',temperature=0.7){
     return await 
         (await fetch(`https://api.openai.com/v1/chat/completions`,
              {
@@ -57,7 +57,7 @@ async function listModels(){
     return models    
 }
 
-async function retrieveModel(model='gpt-3.5-turbo-0301'){
+async function retrieveModel(model='gpt-3.5-turbo'){
     return await (await fetch(`https://api.openai.com/v1/models/${model}`,{headers:{'Authorization':`Bearer ${key}`}})).json()
 }
 
@@ -76,6 +76,7 @@ async function chatUI(div){ // cerate a simple chat div
             return '<p>'+txt.replaceAll('\n','<br>')+'</p>'
         }
     }
+    div
     div.innerHTML='<h3>A simple OpenAI Chat</h3>Model, Role and temperature (<span id="temperatureValue">0.7</span>).<br>'
     // select model
     let selectModel=document.createElement('select')
@@ -86,7 +87,7 @@ async function chatUI(div){ // cerate a simple chat div
         opt.value=m.id
         opt.textContent=m.id
     })
-    selectModel.value='gpt-3.5-turbo-0301'
+    selectModel.value='gpt-3.5-turbo'
     div.appendChild(selectModel)
     // select role
     let selectRole=document.createElement('select')
@@ -102,7 +103,7 @@ async function chatUI(div){ // cerate a simple chat div
     let rangeTemperature=document.createElement('input')
     rangeTemperature.type='range'
     rangeTemperature.min=0
-    rangeTemperature.max=1
+    rangeTemperature.max=2
     rangeTemperature.step=0.01
     rangeTemperature.value=0.7
     div.appendChild(rangeTemperature);
