@@ -116,17 +116,19 @@ async function chatUI(div){ // cerate a simple chat div
     ta.style.height='5em'
     ta.style.color='blue'
     let count=0
+    let msgs=[]
     ta.onkeyup=async function(evt){
         if((evt.key=='Enter')&&(evt.shiftKey==false)){
+            count++
             console.log('-------\nPrompt:\n\n'+ta.value)
-            let prompt = ta.value
+            let prompt = ta.value.replace(/\s$/,'')
             ta.focus()
             ta.value=''
             let promptDiv = document.createElement('div')
+            promptDiv.i=count
             //divDialog.appendChild(promptDiv)
             divDialog.prepend(promptDiv)
-            promptDiv.classList.add("promptDiv")
-            count++
+            promptDiv.classList.add(`prompt`)
             promptDiv.innerHTML=`<span style="color:darkgreen;background-color:yellow;cursor:pointer" id="copySpan">${count})</span> ${prompt} <span style='color:red;background-color:yellow;cursor:pointer' id="removeQA">[remove]</span>`
             promptDiv.style.backgroundColor='lightgray'
             promptDiv.style.color='blue'
@@ -141,13 +143,38 @@ async function chatUI(div){ // cerate a simple chat div
             let responseDiv = document.createElement('div')
             //divDialog.appendChild(responseDiv)
             divDialog.prepend(responseDiv)
-            responseDiv.innerHTML='...'
-            completions(prompt,selectModel.value,selectRole.value,rangeTemperature.value).then(x=>{
-                //console.log([prompt,selectModel.value,selectRole.value,rangeTemperature.value])
-                responseDiv.innerHTML=txt2html(x.choices[0].message.content)
-                console.log('-------\nReply:\n\n'+x.choices[0].message.content)
+            msgs.push({
+                role:selectRole.value,
+                content:prompt
             })
-            
+            if(selectRole.value=='user'){
+                responseDiv.innerHTML='...'
+                //completions(prompt,selectModel.value,selectRole.value,rangeTemperature.value).then(x=>{
+                completions(JSON.stringify(msgs),selectModel.value,selectRole.value,rangeTemperature.value).then(x=>{
+                    //console.log([prompt,selectModel.value,selectRole.value,rangeTemperature.value])
+                    let res=x.choices[0].message.content
+                    if(res[0]=='{'){
+                        res=JSON.parse(x.choices[0].message.content).content
+                    }else if(res[0]=='['){
+                        res=JSON.parse(res)[0].content
+                    }
+                    responseDiv.innerHTML=txt2html(res)
+                    //responseDiv.innerHTML=txt2html(x.choices[0].message.content)
+                    //responseDiv.innerHTML=JSON.parse(x.choices[0].message.content)[0].content
+                    //console.log('-------\nReply:\n\n'+x.choices[0].message.content)
+                    console.log('-------\nReply:\n\n'+responseDiv.innerHTML)
+                    console.log('-------\nReply:\n\n'+res)
+                    msgs.push({
+                        role:'assistant',
+                        //content:x.choices[0].message.content
+                        content:res
+                    })
+                    //console.log(msgs)
+                })
+            }else{  // non user role
+                //
+            }
+            console.log(msgs)
         }
     }
     let divDialog = document.createElement('div')
