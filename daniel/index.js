@@ -48,7 +48,7 @@ fetch(dataURL)
 
     let question = "Tl/dr;"
     let q = txt + question
-    let r=await gpt.completions(q)
+    let r=await gpt.completions(q,"gpt-3.5-turbo","user",0)
     gptdiv1.insertAdjacentHTML("beforeend",`<dt>${question}</dt><dd>${r.choices[0].message.content}</dd>`)
 
 
@@ -84,9 +84,55 @@ fetch(dataURL)
     r=await gpt.completions(q)
     gptdiv1.insertAdjacentHTML("beforeend",`<dt>${question}</dt><dd>${r.choices[0].message.content}</dd>`)
 
-    console.log(filteredData)
     let textArea = document.querySelector("#GPTDiv_1 textarea")
-    console.log(textArea)
-    window.txt=txt;
     textArea.value=txt;
+
+    url="https://data.montgomerycountymd.gov/resource/icn6-v9z3.json?$where=date%3E%222023-02-1T00:00:00%22%20AND%20crimename2=%22Aggravated%20Assault%22"
+    let filteredData2 = await (await fetch(url)).json()
+    txt = filteredData2.map(c=>Object.entries(c).reduce( (pv,cv)=> `${pv} ${cv[0]} ${cv[1]}`,"") ).reduce( (pv,cv)=>`${pv}\n${cv}`) +"\n\n"
+    let gptdiv2=document.getElementById("GPTDiv_2")
+    buildTable(filteredData2,"tbl2")
+
+    question = "Tl/dr;"
+    q = txt + question
+    r=await gpt.completions(q)
+    if (r.error){
+        console.error(r.error.message)
+        gptdiv2.insertAdjacentHTML("beforeend",`<div class="GPT-error">Error ${r.error.type} ${r.error.code}: ${r.error.message}</div>`)
+        return;
+    }
+    gptdiv2.insertAdjacentHTML("beforeend",`<dt>${question}</dt><dd>${r?.choices[0].message.content}</dd>`)
+
+    question = "Which police district code responded to the most incidents in the data?"
+    q = txt + question
+    r=await gpt.completions(q)
+    gptdiv2.insertAdjacentHTML("beforeend",`<dt>${question}</dt><dd>${r?.choices[0].message.content}</dd>`)
+
+    question = "According to the data, which city had the most incidents?"
+    q = txt + question
+    r=await gpt.completions(q)
+    gptdiv2.insertAdjacentHTML("beforeend",`<dt>${question}</dt><dd>${r?.choices[0].message.content}</dd>`)
+ 
+
+    question = "According to the data, which city had the most incidents?"
+    q = txt + question
+    r=await gpt.completions(q)
+    gptdiv2.insertAdjacentHTML("beforeend",`<dt>${question}</dt><dd>${r?.choices[0].message.content}</dd>`)
+
+    question = "According to the data, which city had the most incidents?"
+    q = txt + question
+    r=await gpt.completions(q)
+    gptdiv2.insertAdjacentHTML("beforeend",`<dt>${question}</dt><dd>${r?.choices[0].message.content}</dd>`)
+
+
+    question = "According to the data, how many was the place a parking lot?"
+    q = txt + question
+    r=await gpt.completions(q)
+    gptdiv2.insertAdjacentHTML("beforeend",`<dt>${question}</dt><dd>${r?.choices[0].message.content}</dd>`)
+
+    question = "According to the data, which date had the most incidents"
+    q = txt + question
+    r=await gpt.completions(q)
+    gptdiv2.insertAdjacentHTML("beforeend",`<dt>${question}</dt><dd>${r?.choices[0].message.content}</dd>`)
+
 })
