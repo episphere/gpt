@@ -69,6 +69,7 @@ async function chatUI(div){ // cerate a simple chat div
     if(typeof(div)=='string'){
         div = document.getElementById(div)
     }
+    div.classList.add('chatUIdiv')
     function txt2html(txt){
         if(txt[0]=='<'){ // html
             return txt
