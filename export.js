@@ -50,6 +50,21 @@ async function completions(content='Say this is a test!',model='gpt-3.5-turbo',r
          ).json()
 }
 
+async function embeddings(content, model="text-embedding-ada-002") {
+    return await 
+        (await fetch(`https://api.openai.com/v1/embeddings`, {
+            method:'POST',
+            headers:{
+            'Authorization':`Bearer ${key}`,
+            'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({
+                model: model,
+                input: content
+            })
+        })).json()
+}
+
 async function listModels(){
     if(!models){
         models = await (await fetch('https://api.openai.com/v1/models',{headers:{'Authorization':`Bearer ${key}`}})).json()
@@ -190,6 +205,7 @@ export{
     key,
     check4key,
     completions,
+    embeddings,
     listModels,
     retrieveModel,
     models,
