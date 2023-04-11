@@ -5,6 +5,7 @@ import {
     key,
     check4key,
     completions,
+    embeddings,
     listModels,
     retrieveModel,
     models 
@@ -16,6 +17,7 @@ export {
     key,
     check4key,
     completions,
+    embeddings,
     listModels,
     retrieveModel,
     models 
