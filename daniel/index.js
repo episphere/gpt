@@ -19,6 +19,35 @@ function buildTable(res, id) {
 }
 
 
+async function complete_with_context(content,params={}){
+    const {
+        model='gpt-3.5-turbo',
+        role='user',
+        temperature=0.7,
+        context=""
+    } = params
+    let key=localStorage.GPT_API_key
+
+    return await 
+    (await fetch(`https://api.openai.com/v1/chat/completions`,
+         {
+             method:'POST',
+             headers:{
+                 'Authorization':`Bearer ${key}`,
+                 'Content-Type': 'application/json',
+             },
+             body:JSON.stringify({
+                 model:model,
+                 messages:[
+                    {role:'system',content:context},
+                    {role:'user', content: content}
+                 ]
+             })
+         })
+     ).json()
+}
+
+
 // point 1 and point 2 should have longitude and laditude
 let isPoint = (pt) => (pt) => !!(Number.parseFloat(pt.longitude) && Number.parseFloat(pt.latitude) &&
     Number.parseFloat(pt.longitude) <= 360. && Math.abs(Number.parseFloat(pt.latitude) <= 90))
@@ -69,10 +98,10 @@ fetch(dataURL)
         buildTable(filteredData, "tbl1")
 
         let txt = filteredData.map(c => Object.entries(c).reduce((pv, cv) => `${pv} ${cv[0]} ${cv[1]}`, "")).reduce((pv, cv) => `${pv}\n${cv}`) + "\n\n"
-
+        console.log(txt)
         let question = "Tl/dr;"
         let q = txt + question
-        let r = await gpt.completions(q, "gpt-3.5-turbo", "user", 0)
+        let r = await gpt.completions(q)
         gptdiv1.insertAdjacentHTML("beforeend", `<dt>${question}</dt><dd>${r.choices[0].message.content}</dd>`)
 
 
@@ -119,7 +148,8 @@ fetch(dataURL)
 
         question = "Tl/dr;"
         q = txt + question
-        r = await gpt.completions(q)
+        console.log(txt)
+        r = await complete_with_context(question,{context:txt})
         if (r.error) {
             console.error(r.error.message)
             gptdiv2.insertAdjacentHTML("beforeend", `<div class="GPT-error">Error ${r.error.type} ${r.error.code}: ${r.error.message}</div>`)
@@ -129,7 +159,12 @@ fetch(dataURL)
 
         question = "Which police district code responded to the most incidents in the data?"
         q = txt + question
-        r = await gpt.completions(q)
+        r = await gpt.completions(q)       
+         if (r.error) {
+            console.error(r.error.message)
+            gptdiv2.insertAdjacentHTML("beforeend", `<div class="GPT-error">Error ${r.error.type} ${r.error.code}: ${r.error.message}</div>`)
+            return;
+        }
         gptdiv2.insertAdjacentHTML("beforeend", `<dt>${question}</dt><dd>${r?.choices[0].message.content}</dd>`)
 
         question = "According to the data, which city had the most incidents?"
