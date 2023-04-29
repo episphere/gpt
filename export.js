@@ -2,7 +2,7 @@
 // documentation: https://platform.openai.com/docs/api-reference/making-requests?lang=curl
 // convert curl to fetch: https://www.scrapingbee.com/curl-converter/javascript-fetch
 
-console.log('jonas/export.js imported')
+console.log(`${location.href}export.js imported`)
 
 const hello=`hello GPT at ${Date()}`;
 
