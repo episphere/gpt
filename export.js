@@ -8,6 +8,7 @@ const hello=`hello GPT at ${Date()}`;
 
 var key = null //'null'
 var models = false
+let msgs=[]
 
 function check4key(k){
     if(!k){
@@ -116,7 +117,7 @@ async function chatUI(div){ // cerate a simple chat div
         opt.value=r
         opt.textContent=r
     })
-    selectRole.value='user'
+    //selectRole.value='user'
     // set temperature
     let rangeTemperature=document.createElement('input')
     rangeTemperature.type='range'
@@ -129,15 +130,24 @@ async function chatUI(div){ // cerate a simple chat div
         div.querySelector('#temperatureValue').textContent=rangeTemperature.value
     }
     let ta = document.createElement('textarea')
+    ta.value='you are a helpful assistant'
     div.appendChild(ta)
+    let btCopy = document.createElement('button')
+    btCopy.textContent='copy'
+    div.appendChild(btCopy)
+    btCopy.onclick=function(){
+        navigator.clipboard.writeText(ta.value)
+    }
+    let btClear = document.createElement('button')
+    btClear.textContent='clear'
+    btClear.onclick=function(){ta.value=''}
+    div.appendChild(btClear)
     ta.style.width="100%"
     ta.style.height='5em'
     ta.style.color='blue'
     let count=0
-    let msgs=[]
     ta.onkeyup=async function(evt){
         if((evt.key=='Enter')&&(evt.shiftKey==false)){
-            count++
             console.log('-------\nPrompt:\n\n'+ta.value)
             let prompt = ta.value.replace(/\s$/,'')
             ta.focus()
@@ -147,16 +157,29 @@ async function chatUI(div){ // cerate a simple chat div
             //divDialog.appendChild(promptDiv)
             divDialog.prepend(promptDiv)
             promptDiv.classList.add(`prompt`)
-            promptDiv.innerHTML=`<span style="color:darkgreen;background-color:yellow;cursor:pointer" id="copySpan">${count})</span> ${prompt} <span style='color:red;background-color:yellow;cursor:pointer' id="removeQA">[remove]</span>`
+            //promptDiv.innerHTML=`<span style="color:darkgreen;background-color:yellow;cursor:pointer" id="copySpan">${count+1})</span> ${prompt} [<span style='color:red;background-color:yellow;cursor:pointer' id="removeQA">remove</span>][<span style='color:blue;background-color:yellow;cursor:pointer' id="embedThis">embed this</span>][<span style='color:blue;background-color:yellow;cursor:pointer' id="embedSofar">embed so far</span>]`
+            promptDiv.innerHTML=`<span style="color:darkgreen;background-color:yellow;cursor:pointer" id="copySpan">${count+1})</span> (${selectRole.value}) [<span style='color:blue;background-color:yellow;cursor:pointer' id="embedThis">embed this</span>][<span style='color:blue;background-color:yellow;cursor:pointer' id="embedSofar">embed so far</span>]<br>${prompt}`
             promptDiv.style.backgroundColor='lightgray'
             promptDiv.style.color='blue'
             promptDiv.querySelector('#copySpan').onclick=function(){
                 this.parentElement.parentElement.parentElement.querySelector('textarea').value = prompt
             }
-            promptDiv.querySelector('#removeQA').onclick=async function(){
-                await this.parentElement.parentElement.childNodes[count-1].remove();
-                await this.parentElement.parentElement.childNodes[count-1].remove();
-                count--
+            //promptDiv.querySelector('#removeQA').onclick=async function(){
+            //    await this.parentElement.parentElement.childNodes[count].remove();
+            //    await this.parentElement.parentElement.childNodes[count].remove();
+            //    count--
+            //}
+            promptDiv.querySelector('#embedThis').onclick=async function(){
+                ta.value='...'
+                let i = this.parentElement.i
+                let ebi= await embeddings(msgs[i].content)
+                ta.value=ebi.data[0].embedding
+            }
+            promptDiv.querySelector('#embedSofar').onclick=async function(){
+                ta.value='...'
+                let i = this.parentElement.i
+                let ebi= await embeddings(msgs.map(x=>x.content).join('; '))
+                ta.value=ebi.data[0].embedding
             }
             let responseDiv = document.createElement('div')
             //divDialog.appendChild(responseDiv)
@@ -165,6 +188,7 @@ async function chatUI(div){ // cerate a simple chat div
                 role:selectRole.value,
                 content:prompt
             })
+            count++
             if(selectRole.value=='user'){
                 responseDiv.innerHTML='...'
                 //completions(prompt,selectModel.value,selectRole.value,rangeTemperature.value).then(x=>{
@@ -189,8 +213,8 @@ async function chatUI(div){ // cerate a simple chat div
                     })
                     //console.log(msgs)
                 })
-            }else{  // non user role
-                //
+            }else{  // user
+                selectRole.value='user'
             }
             console.log(msgs)
         }
@@ -211,5 +235,6 @@ export{
     listModels,
     retrieveModel,
     models,
-    chatUI
+    chatUI,
+    msgs
 }
