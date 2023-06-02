@@ -158,8 +158,8 @@ async function chatUI(div){ // cerate a simple chat div
             divDialog.prepend(promptDiv)
             promptDiv.classList.add(`prompt`)
             //promptDiv.innerHTML=`<span style="color:darkgreen;background-color:yellow;cursor:pointer" id="copySpan">${count+1})</span> ${prompt} [<span style='color:red;background-color:yellow;cursor:pointer' id="removeQA">remove</span>][<span style='color:blue;background-color:yellow;cursor:pointer' id="embedThis">embed this</span>][<span style='color:blue;background-color:yellow;cursor:pointer' id="embedSofar">embed so far</span>]`
-            promptDiv.innerHTML=`<span style="color:darkgreen;background-color:yellow;cursor:pointer" id="copySpan">${count+1})</span> (${selectRole.value}) [<span style='color:blue;background-color:yellow;cursor:pointer' id="embedThis">embed this</span>][<span style='color:blue;background-color:yellow;cursor:pointer' id="embedSofar">embed so far</span>]<br>${prompt}`
-            promptDiv.style.backgroundColor='lightgray'
+            promptDiv.innerHTML=`<p style="background-color:lightgray"><span style="color:darkgreen;background-color:yellow;cursor:pointer" id="copySpan">${count+1})</span> (${selectRole.value}) [<span style='color:blue;background-color:yellow;cursor:pointer' id="embedThis">embed this</span>][<span style='color:blue;background-color:yellow;cursor:pointer' id="embedSofar">embed so far</span>]</p>${prompt}`
+            //promptDiv.style.backgroundColor='lightgray'
             promptDiv.style.color='blue'
             promptDiv.querySelector('#copySpan').onclick=function(){
                 this.parentElement.parentElement.parentElement.querySelector('textarea').value = prompt
@@ -171,7 +171,7 @@ async function chatUI(div){ // cerate a simple chat div
             //}
             promptDiv.querySelector('#embedThis').onclick=async function(){
                 ta.value='...'
-                let i = this.parentElement.i
+                let i = this.parentElement.parentElement.i
                 let ebi= await embeddings(msgs[i].content)
                 ta.value=ebi.data[0].embedding
             }
