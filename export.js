@@ -214,7 +214,12 @@ async function chatUI(div){ // cerate a simple chat div
                     //responseDiv.innerHTML=JSON.parse(x.choices[0].message.content)[0].content
                     //console.log('-------\nReply:\n\n'+x.choices[0].message.content)
                     console.log('-------\nReply:\n\n'+responseDiv.innerHTML)
-                    console.log('-------\nReply:\n\n'+res)
+                    console.log('-------\nReply:\n\n'+res);
+                    [...(responseDiv.querySelectorAll('pre>code.language-html'))].forEach(x=>{
+                        let p = document.createElement('p')
+                        p.innerHTML=x.innerText
+                        x.parentElement.after(p)
+                    })
                     msgs.push({
                         role:'assistant',
                         //content:x.choices[0].message.content
