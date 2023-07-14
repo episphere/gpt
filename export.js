@@ -5,6 +5,7 @@
 console.log(`${location.href}export.js imported`)
 
 const hello=`hello GPT at ${Date()}`;
+import showdown from 'https://cdn.jsdelivr.net/npm/showdown@2.1.0/+esm'  // markdown>html
 
 var key = null //'null'
 var models = false
@@ -89,13 +90,21 @@ async function chatUI(div){ // cerate a simple chat div
     div.style.margin='20px'
     div.style.color='navy'
     function txt2html(txt){
+        //showdown
+        /*
         if(txt[0]=='<'){ // html
             return txt
         }else{
             return '<p>'+txt.replaceAll('\n','<br>')+'</p>'
         }
+        */
+        let cv = new showdown.Converter({
+            //optionKey: 'value',
+            //extensions:['twitter'],
+        })
+        return cv.makeHtml(txt)
+        //return txt
     }
-    div
     div.innerHTML='<h3>A simple OpenAI Chat</h3>Model, Role and temperature (<span id="temperatureValue">0.7</span>).<br>'
     // select model
     let selectModel=document.createElement('select')
@@ -158,7 +167,7 @@ async function chatUI(div){ // cerate a simple chat div
             divDialog.prepend(promptDiv)
             promptDiv.classList.add(`prompt`)
             //promptDiv.innerHTML=`<span style="color:darkgreen;background-color:yellow;cursor:pointer" id="copySpan">${count+1})</span> ${prompt} [<span style='color:red;background-color:yellow;cursor:pointer' id="removeQA">remove</span>][<span style='color:blue;background-color:yellow;cursor:pointer' id="embedThis">embed this</span>][<span style='color:blue;background-color:yellow;cursor:pointer' id="embedSofar">embed so far</span>]`
-            promptDiv.innerHTML=`<p style="background-color:lightgray"><span style="color:darkgreen;background-color:yellow;cursor:pointer" id="copySpan">${count+1})</span> (${selectRole.value}) [<span style='color:blue;background-color:yellow;cursor:pointer' id="embedThis">embed this</span>][<span style='color:blue;background-color:yellow;cursor:pointer' id="embedSofar">embed so far</span>]</p>${prompt}`
+            promptDiv.innerHTML=`<p style="background-color:lightgray"><span style="color:darkgreen;background-color:yellow;cursor:pointer" id="copySpan">${count+1})</span> (${selectRole.value}) [<span style='color:blue;background-color:yellow;cursor:pointer' id="embedThis">embed this</span>][<span style='color:blue;background-color:yellow;cursor:pointer' id="embedSofar">embed so far</span>]</p>${txt2html(prompt)}`
             //promptDiv.style.backgroundColor='lightgray'
             promptDiv.style.color='blue'
             promptDiv.querySelector('#copySpan').onclick=function(){
