@@ -11,7 +11,7 @@ var key = null //'null'
 var models = false
 let msgs=[]
 
-function check4key(k){
+async function check4key(k){
     if(!k){
         const msgTrue = 'API key found, provided to SDK'
         const msgFalse = 'No GPT API Key found, please generate one at https://platform.openai.com/account/api-keys'
@@ -21,7 +21,19 @@ function check4key(k){
             console.log(msgFalse)
             localStorage.GPT_API_key=prompt(msgFalse+' and provide it here: ')
         }
+        // check that key is valid
+        let backupKey = key
         key=localStorage.GPT_API_key
+        let res = await completions('say hello')
+        if(!res.error){
+            console.log('key tested successfuly:',res)
+        }else{
+            key=backupKey // reinstate previous key
+            localStorage.GPT_API_key=key
+            console.log(res.error.message)
+            localStorage.GPT_API_key=prompt('Unable to validate key. You can generate a new one at please generate one at https://platform.openai.com/account/api-keys. Please try again:')
+            check4key()
+        }
         // delete localStorage.GPT_API_key // if this machine cannot be trusted with a persistent API key
     }else{
         localStorage.GPT_API_key=k
