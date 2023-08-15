@@ -132,7 +132,7 @@ async function chatUI(div){ // cerate a simple chat div
     // select role
     let selectRole=document.createElement('select')
     div.appendChild(selectRole);
-    ['system','user','assistant'].forEach(r=>{
+    ['system','user','assistant','function'].forEach(r=>{
         let opt = document.createElement('option')
         selectRole.appendChild(opt)
         opt.value=r
@@ -239,7 +239,7 @@ async function chatUI(div){ // cerate a simple chat div
                     })
                     //console.log(msgs)
                 })
-            }else{  // user
+            }else{  // move to user after system or assistant. Handle function role elsewhere
                 selectRole.value='user'
             }
             console.log(msgs)
