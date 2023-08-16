@@ -42,7 +42,8 @@ async function check4key(k){
         
 }
 
-async function completions(content='Say this is a test!',model='gpt-3.5-turbo',role='user',temperature=0.7){
+//async function completions(content='Say this is a test!',model='gpt-3.5-turbo',role='user',temperature=0.7){
+async function completions(content='Say this is a test!',model='gpt-3.5-turbo-16k-0613',role='user',temperature=0.7){
     return await 
         (await fetch(`https://api.openai.com/v1/chat/completions`,
              {
@@ -83,10 +84,10 @@ async function listModels(){
     if(!models){
         models = await (await fetch('https://api.openai.com/v1/models',{headers:{'Authorization':`Bearer ${key}`}})).json()
     }
-    return models    
+    return models   
 }
 
-async function retrieveModel(model='gpt-3.5-turbo'){
+async function retrieveModel(model='gpt-3.5-turbo-16k-0613'){
     return await (await fetch(`https://api.openai.com/v1/models/${model}`,{headers:{'Authorization':`Bearer ${key}`}})).json()
 }
 
@@ -127,7 +128,7 @@ async function chatUI(div){ // cerate a simple chat div
         opt.value=m.id
         opt.textContent=m.id
     })
-    selectModel.value='gpt-3.5-turbo'
+    selectModel.value='gpt-3.5-turbo-16k-0613'
     div.appendChild(selectModel)
     // select role
     let selectRole=document.createElement('select')
@@ -138,6 +139,10 @@ async function chatUI(div){ // cerate a simple chat div
         opt.value=r
         opt.textContent=r
     })
+    //selectRole.onchange=function(){
+    //    if(this.value=='function')
+    //    4
+    //}
     //selectRole.value='user'
     // set temperature
     let rangeTemperature=document.createElement('input')
