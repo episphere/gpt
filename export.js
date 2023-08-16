@@ -43,7 +43,20 @@ async function check4key(k){
 }
 
 //async function completions(content='Say this is a test!',model='gpt-3.5-turbo',role='user',temperature=0.7){
-async function completions(content='Say this is a test!',model='gpt-3.5-turbo-16k-0613',role='user',temperature=0.7){
+async function completions(content='Say this is a test!',model='gpt-3.5-turbo-16k-0613',role='user',temperature=0.7,functionsImport){
+    let obj = {
+        model:model,
+        messages:[
+            {
+                role:role,
+                content:content
+            }
+        ]
+    }
+    if(functionsImport){
+        let funs = await import(functionsImport)
+        4
+    }
     return await 
         (await fetch(`https://api.openai.com/v1/chat/completions`,
              {
@@ -52,15 +65,7 @@ async function completions(content='Say this is a test!',model='gpt-3.5-turbo-16
                      'Authorization':`Bearer ${key}`,
                      'Content-Type': 'application/json',
                  },
-                 body:JSON.stringify({
-                     model:model,
-                     messages:[
-                         {
-                             role:role,
-                             content:content
-                         }
-                     ]
-                 })
+                 body:JSON.stringify(obj)
              })
          ).json()
 }
@@ -133,7 +138,7 @@ async function chatUI(div){ // cerate a simple chat div
     // select role
     let selectRole=document.createElement('select')
     div.appendChild(selectRole);
-    ['system','user','assistant','function'].forEach(r=>{
+    ['system','user','assistant'].forEach(r=>{
         let opt = document.createElement('option')
         selectRole.appendChild(opt)
         opt.value=r

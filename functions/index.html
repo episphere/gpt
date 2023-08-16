@@ -1,4 +1,4 @@
-<h1> GPT functions</h1>
+<h1> GPT functions <sup style="color:navy;font-weight:normal;font-size:large"> [<a href="https://platform.openai.com/docs/api-reference/chat/create#chat/create-functions" target="_blank" style="color:darkgreen">ref</a>] [<a href="https://openai.com/blog/function-calling-and-other-api-updates" target="_blank" style="color:darkgreen">blog</a>]</sup></h1>
 You can import GPT functions from <a href="https://github.com/episphere/gpt/blob/main/functions" target="_blank">here</a>, 
 
 for example, 
@@ -11,7 +11,7 @@ functions = await import('<a href="https://github.com/episphere/gpt/blob/main/fu
 
 <h3>Full list:</h3>
 <ol>
-    <li>https://github.com/episphere/gpt/blob/main/functions/testFunctions.mjs</li>
+    <li><a href="https://github.com/episphere/gpt/blob/main/functions/testFunctions.mjs" target="_blank">https://episphere.github.io/gpt/functions/testFunctions.mjs</a></li>
     <li>...</li>
 </ol>
 
@@ -20,7 +20,8 @@ functions = await import('<a href="https://github.com/episphere/gpt/blob/main/fu
 
 <script>
     (async function(){ // testing gpt functions
-        functions = await import('https://episphere.github.io/gpt/functions/testFunctions.mjs')
-        console.log('list of functions',Object.keys(functions))
+        gpt = await import('./../export.js')
+        //functions = await import('https://episphere.github.io/gpt/functions/testFunctions.mjs')
+        //console.log('list of functions',Object.keys(functions))
     })()
 </script>
