@@ -1,7 +1,26 @@
-You can import GPT functions from here
+<h1> GPT functions</h1>
+You can import GPT functions from <a href="https://github.com/episphere/gpt/blob/main/functions" target="_blank">here</a>, 
 
 for example, 
 
 <hr>
 
-<li>functions = await import('https://episphere.gihtub.io/gpt/functions/testFunctions.mjs')</li>
+functions = await import('<a href="https://github.com/episphere/gpt/blob/main/functions/testFunctions.mjs" target="_blank">https://episphere.github.io/gpt/functions/testFunctions.mjs</a>')
+
+<hr>
+
+<h3>Full list:</h3>
+<ol>
+    <li>https://github.com/episphere/gpt/blob/main/functions/testFunctions.mjs</li>
+    <li>...</li>
+</ol>
+
+
+<link href="https://episphere.github.io/gpt/gpt.css" rel="stylesheet">
+
+<script>
+    (async function(){ // testing gpt functions
+        functions = await import('https://episphere.github.io/gpt/functions/testFunctions.mjs')
+        console.log('list of functions',Object.keys(functions))
+    })()
+</script>
