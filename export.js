@@ -44,6 +44,15 @@ async function check4key(k){
 
 //async function completions(content='Say this is a test!',model='gpt-3.5-turbo',role='user',temperature=0.7){
 async function completions(content='Say this is a test!',model='gpt-3.5-turbo-16k-0613',role='user',temperature=0.7,functionsImport){
+    if(!model){
+        model='gpt-3.5-turbo-16k-0613'
+    }
+    if(!role){
+        role='user'
+    }
+    if(!temperature){
+        temperature=0.7
+    }
     let obj = {
         model:model,
         messages:[
@@ -54,10 +63,14 @@ async function completions(content='Say this is a test!',model='gpt-3.5-turbo-16
         ],
         temperature:parseFloat(temperature),
     }
+    if((obj.messages.length==1)&(obj.messages[0].content[0]=='[')){ //parse array if bassed back stringified
+        obj.messages=JSON.parse(obj.messages[0].content)
+    }
     if(functionsImport){
         let funs = await import(functionsImport)
         4
     }
+    console.log('obj',obj)
     return await 
         (await fetch(`https://api.openai.com/v1/chat/completions`,
              {
