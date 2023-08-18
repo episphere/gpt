@@ -51,7 +51,8 @@ async function completions(content='Say this is a test!',model='gpt-3.5-turbo-16
                 role:role,
                 content:content
             }
-        ]
+        ],
+        temperature:parseFloat(temperature),
     }
     if(functionsImport){
         let funs = await import(functionsImport)
@@ -235,7 +236,7 @@ async function chatUI(div){ // cerate a simple chat div
                     //responseDiv.innerHTML=txt2html(x.choices[0].message.content)
                     //responseDiv.innerHTML=JSON.parse(x.choices[0].message.content)[0].content
                     //console.log('-------\nReply:\n\n'+x.choices[0].message.content)
-                    console.log('-------\nReply:\n\n'+responseDiv.innerHTML)
+                    //console.log('-------\nReply:\n\n'+responseDiv.innerHTML)
                     console.log('-------\nReply:\n\n'+res);
                     [...(responseDiv.querySelectorAll('pre>code.language-html'))].forEach(x=>{
                         let p = document.createElement('p')
