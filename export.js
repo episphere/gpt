@@ -53,6 +53,8 @@ async function completions(content='Say this is a test!',model='gpt-3.5-turbo-16
     if(!temperature){
         temperature=0.7
     }
+
+    let functionCall={}
     let obj = {
         model:model,
         messages:[
@@ -66,12 +68,21 @@ async function completions(content='Say this is a test!',model='gpt-3.5-turbo-16
     if((obj.messages.length==1)&(obj.messages[0].content[0]=='[')){ //parse array if bassed back stringified
         obj.messages=JSON.parse(obj.messages[0].content)
     }
-    if(functionsImport){
+    if(functionsImport){ // functions being checked
+        obj.functions=[]
         let funs = await import(functionsImport)
-        4
+        Object.keys(funs).forEach(k=>{
+            if(typeof(funs[k])=='object'){
+                obj.functions.push(funs[k])
+            }else{
+                functionCall[k]=funs[k]
+            }
+        }) 
+        //debugger
     }
     console.log('obj',obj)
-    return await 
+    //return await 
+    let res = await
         (await fetch(`https://api.openai.com/v1/chat/completions`,
              {
                  method:'POST',
@@ -82,6 +93,15 @@ async function completions(content='Say this is a test!',model='gpt-3.5-turbo-16
                  body:JSON.stringify(obj)
              })
          ).json()
+    functionCall
+    res.choices.forEach(c=>{
+        if(c.finish_reason=='function_call'){
+            functionCall[c.message.function_call.name](JSON.parse(c.message.function_call.arguments))
+            //debugger
+        }
+    })
+    //debugger
+    return res
 }
 
 async function embeddings(content, model="text-embedding-ada-002") {
