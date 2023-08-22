@@ -1,5 +1,6 @@
 // GPT test functions
 // https://platform.openai.com/docs/api-reference/chat/create#chat/create-functions
+// https://openai.com/blog/function-calling-and-other-api-updates 
 
 const loaded=Date()
 
@@ -17,12 +18,48 @@ const hello = {
     }
 }
 
-function say_hello(date=Date()){
-    console.log(`hello functions at`,date)
+const bye = {
+    "name": "say_goodbye",
+    "description": "say goodbye to functions",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "date": {
+                "type": "string",
+                "description": "date string"
+            },
+        }
+    }
 }
 
-function say_goodbye(date=Date()){
+const weather = {   // at NCI Shady Grove
+    "name": "weather_nci",
+    "description": "weather forecast at NCI Shady Grove",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "when": {
+                "type": "string",
+                "enum": ["Monday", "Tuesday", "Wednesday", "Thursday","Friday","Saturday","Sunday"]
+            }
+        }
+    }
+}
+
+function say_hello(date){
     console.log(`hello functions at`,date)
+    console.log(`signed in to functions at ${Date()}`)
+}
+
+function say_goodbye(date){
+    console.log(`goodbye functions at`,date)
+    console.log(`signed out of functions at ${Date()}`)
+}
+
+async function weather_nci(when){
+    let x = await (await fetch('https://api.weather.gov/gridpoints/LWX/90,80/forecast')).json()
+    let y = x.properties.periods.filter(xi=>xi.name==when.when)[0]
+    console.log('weather at NCI Shady Grove:',y)
 }
 
 /*
@@ -52,5 +89,9 @@ function hello(){
 
 export{
     hello,
-    say_hello
+    bye,
+    weather,
+    say_hello,
+    say_goodbye,
+    weather_nci
 }
