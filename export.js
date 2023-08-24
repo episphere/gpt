@@ -69,16 +69,18 @@ async function completions(content='Say this is a test!',model='gpt-3.5-turbo-16
         obj.messages=JSON.parse(obj.messages[0].content)
     }
     if(functionsImport){ // functions being checked
-        obj.functions=[]
-        let funs = await import(functionsImport)
-        Object.keys(funs).forEach(k=>{
-            if(typeof(funs[k])=='object'){
-                obj.functions.push(funs[k])
-            }else{
-                functionCall[k]=funs[k]
-            }
-        }) 
-        //debugger
+        if(functionsImport.slice(0,4)=='http'){
+            obj.functions=[]
+            let funs = await import(functionsImport)
+            Object.keys(funs).forEach(k=>{
+                if(typeof(funs[k])=='object'){
+                    obj.functions.push(funs[k])
+                }else{
+                    functionCall[k]=funs[k]
+                }
+            }) 
+            //debugger
+        }
     }
     console.log('obj',obj)
     //return await 
@@ -93,11 +95,10 @@ async function completions(content='Say this is a test!',model='gpt-3.5-turbo-16
                  body:JSON.stringify(obj)
              })
          ).json()
-    functionCall
+    //functionCall
     res.choices.forEach(c=>{
         if(c.finish_reason=='function_call'){
-            functionCall[c.message.function_call.name](JSON.parse(c.message.function_call.arguments))
-            //debugger
+            functionCall[c.message.function_call.name](JSON.parse(c.message.function_call.arguments)).then(console.log)
         }
     })
     //debugger
@@ -157,7 +158,7 @@ async function chatUI(div){ // cerate a simple chat div
         return cv.makeHtml(txt)
         //return txt
     }
-    div.innerHTML='<h3>A simple OpenAI Chat</h3>Model, Role and temperature (<span id="temperatureValue">0.7</span>).<br>'
+    div.innerHTML='<h3>A simple OpenAI Chat</h3>Model, Role, temperature (<span id="temperatureValue">0.7</span>) and Functions.<br>'
     // select model
     let selectModel=document.createElement('select')
     await listModels()
@@ -171,6 +172,7 @@ async function chatUI(div){ // cerate a simple chat div
     div.appendChild(selectModel)
     // select role
     let selectRole=document.createElement('select')
+    selectRole.id = "selectRole"
     div.appendChild(selectRole);
     ['system','user','assistant'].forEach(r=>{
         let opt = document.createElement('option')
@@ -178,10 +180,13 @@ async function chatUI(div){ // cerate a simple chat div
         opt.value=r
         opt.textContent=r
     })
-    //selectRole.onchange=function(){
-    //    if(this.value=='function')
-    //    4
-    //}
+    selectRole.onchange=function(){
+        if(this.value=='user'){
+            selectFunctions.hidden=false
+        }else{
+            selectFunctions.hidden=true
+        }
+    }
     //selectRole.value='user'
     // set temperature
     let rangeTemperature=document.createElement('input')
@@ -194,6 +199,18 @@ async function chatUI(div){ // cerate a simple chat div
     rangeTemperature.onchange=()=>{
         div.querySelector('#temperatureValue').textContent=rangeTemperature.value
     }
+    let selectFunctions=document.createElement('select');
+    [
+        "no functions",
+        "http://localhost:8000/gpt/functions/testFunctions.mjs",
+        "https://episphere.github.io/gpt/functions/testFunctions.mjs"
+    ].forEach(url=>{
+        let opt = document.createElement('option')
+        opt.textContent= opt.value = url
+        selectFunctions.appendChild(opt)
+    })
+    selectFunctions.hidden=true;
+    div.appendChild(selectFunctions);
     let ta = document.createElement('textarea')
     ta.value='you are a helpful assistant'
     div.appendChild(ta)
@@ -256,15 +273,18 @@ async function chatUI(div){ // cerate a simple chat div
             count++
             if(selectRole.value=='user'){
                 responseDiv.innerHTML='...'
-                //completions(prompt,selectModel.value,selectRole.value,rangeTemperature.value).then(x=>{
-                completions(JSON.stringify(msgs),selectModel.value,selectRole.value,rangeTemperature.value).then(x=>{
+                // check for functions
+                
+                completions(JSON.stringify(msgs),selectModel.value,selectRole.value,rangeTemperature.value,selectFunctions.value).then(x=>{
                     //console.log([prompt,selectModel.value,selectRole.value,rangeTemperature.value])
                     let res=x.choices[0].message.content
-                    if(res[0]=='{'){
-                        res=JSON.parse(x.choices[0].message.content).content
-                    }else if(res[0]=='['){
-                        res=JSON.parse(res)[0].content
-                    }
+                    if(res){
+                        if(res[0]=='{'){
+                            res=JSON.parse(x.choices[0].message.content).content
+                        }else if(res[0]=='['){
+                            res=JSON.parse(res)[0].content
+                        }
+                    }  
                     responseDiv.innerHTML=txt2html(res)
                     //responseDiv.innerHTML=txt2html(x.choices[0].message.content)
                     //responseDiv.innerHTML=JSON.parse(x.choices[0].message.content)[0].content
@@ -276,15 +296,29 @@ async function chatUI(div){ // cerate a simple chat div
                         p.innerHTML=x.innerText
                         x.parentElement.after(p)
                     })
-                    msgs.push({
-                        role:'assistant',
-                        //content:x.choices[0].message.content
-                        content:res
-                    })
+                    if(x.choices[0].finish_reason=="function_call"){
+                        console.log(`function_call:`,x)
+                        let msg=x.choices[0].message
+                        msgs.push(msg)
+                        // show result in the UI
+                        // continue back to the loop
+                        //completions(JSON.stringify(msgs),selectModel.value,x.choices[0].message.role,rangeTemperature.value,selectFunctions.value).then(x=>{
+                        //    4
+                        //})
+                        4
+                        
+                    }else{
+                        msgs.push({
+                            role:'assistant',
+                            //content:x.choices[0].message.content
+                            content:res
+                        })
+                    }   
                     //console.log(msgs)
                 })
             }else{  // move to user after system or assistant. Handle function role elsewhere
                 selectRole.value='user'
+                selectFunctions.hidden=false
             }
             console.log(msgs)
         }

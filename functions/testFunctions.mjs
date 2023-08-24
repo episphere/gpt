@@ -60,6 +60,7 @@ async function weather_nci(when){
     let x = await (await fetch('https://api.weather.gov/gridpoints/LWX/90,80/forecast')).json()
     let y = x.properties.periods.filter(xi=>xi.name==when.when)[0]
     console.log('weather at NCI Shady Grove:',y)
+    return `Weather forecast for ${when.when}: ${y.detailedForecast}`
 }
 
 /*
