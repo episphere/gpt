@@ -96,12 +96,18 @@ async function completions(content='Say this is a test!',model='gpt-3.5-turbo-16
              })
          ).json()
     //functionCall
-    res.choices.forEach(c=>{
+    if(res.choices[0].message.function_call){
+        res.choices[0].message.content= await functionCall[res.choices[0].message.function_call.name](JSON.parse(res.choices[0].message.function_call.arguments))
+    }
+    /*
+    res.choices.forEach(async c=>{
         if(c.finish_reason=='function_call'){
-            functionCall[c.message.function_call.name](JSON.parse(c.message.function_call.arguments)).then(console.log)
+            res
+            functionCall[c.message.function_call.name](JSON.parse(c.message.function_call.arguments))
+            //functionCall[c.message.function_call.name](JSON.parse(c.message.function_call.arguments)).then(console.log)
         }
     })
-    //debugger
+    */
     return res
 }
 
@@ -303,19 +309,27 @@ async function chatUI(div){ // cerate a simple chat div
                         // show result in the UI
                         // continue back to the loop
                         //completions(JSON.stringify(msgs),selectModel.value,x.choices[0].message.role,rangeTemperature.value,selectFunctions.value).then(x=>{
+                        // call with original message, this time without the function
+                        // let xx = completions(JSON.stringify(msgs),selectModel.value,x.choices[0].message.role,rangeTemperature.value)
                         //    4
                         //})
-                        4
+                        ta.value=msgs.slice(-2)[0].content
+                        // let oldFun=selectFunctions.value
+                        // selectFunctions.value = "no functions"
+                        // ta.onkeyup({key:'Enter',shiftKey:false})
+                        
                         
                     }else{
-                        msgs.push({
-                            role:'assistant',
-                            //content:x.choices[0].message.content
-                            content:res
-                        })
+                        msgs.push(x.choices[0].message)
+                        //msgs.push({
+                        //    role:'assistant',
+                        //    content:x.choices[0].message.content
+                        //})
+                        4
                     }   
                     //console.log(msgs)
                 })
+                //let funContent = await x.choices[0].message.function_call['name'](JSON.parse(x.choices[0].message.function_call.arguments))
             }else{  // move to user after system or assistant. Handle function role elsewhere
                 selectRole.value='user'
                 selectFunctions.hidden=false
