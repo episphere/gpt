@@ -315,7 +315,7 @@ async function chatUI(div){ // cerate a simple chat div
                         //})
                         ta.value=msgs.slice(-2)[0].content
                         // let oldFun=selectFunctions.value
-                        // selectFunctions.value = "no functions"
+                        selectFunctions.value = "no functions"
                         // ta.onkeyup({key:'Enter',shiftKey:false})
                         
                         
