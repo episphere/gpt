@@ -96,14 +96,13 @@ async function completions(content='Say this is a test!',model='gpt-3.5-turbo-16
              })
          ).json()
     if(res.error){
-        let newKey = prompt(`Error: "${res.error.message}" :-(
+        let newKey = prompt(`Error: ${res.error.message} :-(
         \n Please fix it and reset or provide new key` )
         if(newKey){
             if(newKey&(newKey.length>0)){
                 localStorage.GPT_API_key=newKey
             }
         }
-        debugger
     }
     if(res.choices[0].message.function_call){
         res.choices[0].message.content= await functionCall[res.choices[0].message.function_call.name](JSON.parse(res.choices[0].message.function_call.arguments))
