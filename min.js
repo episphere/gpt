@@ -9,7 +9,7 @@ import {
     listModels,
     retrieveModel,
     models 
-} from "./export.js";
+} from "https://episphere.github.io/gpt/export.js";
 
 // note check4key() auth trigger not included
 
