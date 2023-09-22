@@ -254,12 +254,12 @@ async function chatUI(div){ // cerate a simple chat div
             divDialog.prepend(promptDiv)
             promptDiv.classList.add(`prompt`)
             //promptDiv.innerHTML=`<span style="color:darkgreen;background-color:yellow;cursor:pointer" id="copySpan">${count+1})</span> ${prompt} [<span style='color:red;background-color:yellow;cursor:pointer' id="removeQA">remove</span>][<span style='color:blue;background-color:yellow;cursor:pointer' id="embedThis">embed this</span>][<span style='color:blue;background-color:yellow;cursor:pointer' id="embedSofar">embed so far</span>]`
-            promptDiv.innerHTML=`<p style="background-color:lightgray"><span style="color:darkgreen;background-color:yellow;cursor:pointer" id="copySpan">${count+1})</span> (${selectRole.value}) [<span style='color:blue;background-color:yellow;cursor:pointer' id="embedThis">embed this</span>][<span style='color:blue;background-color:yellow;cursor:pointer' id="embedSofar">embed so far</span>]</p>${txt2html(prompt)}`
+            promptDiv.innerHTML=`<p style="background-color:lightgray">${count+1}) (${selectRole.value}) [<span style='color:blue;background-color:yellow;cursor:pointer' id="embedThis">embed this</span>] [<span style='color:blue;background-color:yellow;cursor:pointer' id="embedSofar">embed so far</span>] [<span id="TAcopy" style="background-color:yellow">copy</span>]</p>${txt2html(prompt)}`
             //promptDiv.style.backgroundColor='lightgray'
             promptDiv.style.color='blue'
-            promptDiv.querySelector('#copySpan').onclick=function(){
-                this.parentElement.parentElement.parentElement.querySelector('textarea').value = prompt
-            }
+            //promptDiv.querySelector('#copySpan').onclick=function(){
+            //    this.parentElement.parentElement.parentElement.querySelector('textarea').value = prompt
+            //}
             //promptDiv.querySelector('#removeQA').onclick=async function(){
             //    await this.parentElement.parentElement.childNodes[count].remove();
             //    await this.parentElement.parentElement.childNodes[count].remove();
@@ -276,6 +276,16 @@ async function chatUI(div){ // cerate a simple chat div
                 let i = this.parentElement.i
                 let ebi= await embeddings(msgs.map(x=>x.content).join('; '))
                 ta.value=ebi.data[0].embedding
+            }
+            promptDiv.querySelector('#TAcopy').onclick=async function(){
+                let el = this
+                ta.value='...'
+                let i = this.parentElement.parentElement.i
+                el.style="background-color:lightgreen"
+                ta.value=el.parentElement.parentElement.querySelectorAll('p')[1].textContent
+                setTimeout(function(){
+                    el.style="background-color:yellow"
+                },1000)
             }
             let responseDiv = document.createElement('div')
             //divDialog.appendChild(responseDiv)
