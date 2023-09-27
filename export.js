@@ -8,7 +8,7 @@ const hello=`hello GPT at ${Date()}`;
 import showdown from 'https://cdn.jsdelivr.net/npm/showdown@2.1.0/+esm'  // markdown>html
 
 var key = null //'null'
-var models = false
+var models = null
 let msgs=[]
 
 async function check4key(k){
@@ -99,8 +99,9 @@ async function completions(content='Say this is a test!',model='gpt-3.5-turbo-16
         let newKey = prompt(`Error: ${res.error.message} :-(
         \n Please fix it and reset or provide new key` )
         if(newKey){
-            if(newKey&(newKey.length>0)){
-                localStorage.GPT_API_key=newKey
+            if(newKey.length>0){
+                //localStorage.GPT_API_key=newKey
+                await check4key(newKey)
             }
         }
     }
@@ -137,6 +138,8 @@ async function embeddings(content, model="text-embedding-ada-002") {
 async function listModels(){
     if(!models){
         models = await (await fetch('https://api.openai.com/v1/models',{headers:{'Authorization':`Bearer ${key}`}})).json()
+        //let res = await fetch('https://api.openai.com/v1/models',{headers:{'Authorization':`Bearer ${key}`}})
+        //let x = 44
     }
     return models   
 }
