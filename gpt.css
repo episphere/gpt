@@ -42,11 +42,11 @@ p {
 
 
 code {
-  color:rgb(111, 64, 108);
+  color:brown;
   font-family:var(--family);
   /*font-family:var(--family);
   font-style: italic;*/
-  background-color:rgb(240, 240, 240)';
+  background-color:white;
 }
 
 
