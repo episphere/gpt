@@ -64,6 +64,15 @@ async function weather_nci(when){
 }
 
 /*
+async fetchUCSC = async function(pams){
+    parms = parms|{
+        genome:'hg38',
+        chr:1,
+        start:100000,
+        end:100100
+    }
+    genome=hg38&chrom=1&start=100000&end=100100
+}
 
 function hello(){
     console.log(`hello functions at ${loaded}`)
