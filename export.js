@@ -102,6 +102,7 @@ async function completions(content='Say this is a test!',model='gpt-3.5-turbo-16
             if(newKey.length>0){
                 //localStorage.GPT_API_key=newKey
                 await check4key(newKey)
+                //chatUI(div)
             }
         }
     }
