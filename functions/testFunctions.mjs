@@ -61,26 +61,56 @@ const weather = {   // at NCI Shady Grove
     }
 };
 
-async function fetchUCSC(parms){
+async function funFetchUCSC(parms){
     parms = parms||{
         genome:'hg38',
-        chr:1,
+        chrom:'chr1',
         start:100000,
         end:100100
     }
+    parms.genome=parms.genome||'hg38' // default assembly
     console.log('parms:',parms)
     //genome=hg38&chrom=1&start=100000&end=100100
-    let url = 'https://api.genome.ucsc.edu'
+    let url = 'https://api.genome.ucsc.edu/getData/sequence'
     Object.keys(parms).forEach((k,i)=>{
         if(i==0){
             url+=`?${k}=${parms[k]}`
         }else{
-            url+=`&${k}=${parms[k]}`
+            url+=`;${k}=${parms[k]}`
         }
     })
     console.log(url)
-    debugger
+    let res = await (await fetch(url)).json()
+    return res.dna
+    //return JSON.stringify(res)
+    //debugger
 }
+const fetchUCSC = {   // at NCI Shady Grove
+    "name": "funFetchUCSC",
+    "description": "get sequence from human genome at chromossome position, from start to end of segment",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "genome": {
+                "type": "string",
+                "description":'genome assembly defined as "genome=hg<num>"',
+                "enum": ["hg38", "hg37"]
+            },
+            "chrom": {
+                "type": "string",
+                "description":'chromossome number or letter, tipically "chr<num>"',
+            },
+            "start": {
+                "type": "integer",
+                "description":'starting position in the chromossome, use 100000 as the default value',
+            },
+            "end": {
+                "type": "integer",
+                "description":'end position in the chromossome, use 100100 as the default value',
+            },
+        }
+    }
+};
 
 /*
 async fetchUCSC = async function(pams){
@@ -123,5 +153,6 @@ export{
     say_hello,
     say_goodbye,
     weather_nci,
-    fetchUCSC
+    fetchUCSC,
+    funFetchUCSC
 }
