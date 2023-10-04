@@ -81,7 +81,7 @@ async function funFetchUCSC(parms){
     })
     console.log(url)
     let res = await (await fetch(url)).json()
-    return res.dna
+    return res.dna.toUpperCase()
     //return JSON.stringify(res)
     //debugger
 }
