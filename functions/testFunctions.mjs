@@ -112,6 +112,40 @@ const fetchUCSC = {   // at NCI Shady Grove
     }
 };
 
+async function rankSumTest(parms){
+    // lets do t-test to warm things up
+    parms=parms||{
+        population1:[1,3,2,4,1,2,3,2,5,3],
+        population2:[3,4,5,3,4,2,3,5,4,6,7,4]
+    }
+    // get simple-statistics library
+    let st=await import('https://esm.sh/simple-statistics@7.8.3')
+    let z = st.tTestTwoSample(parms.population1,parms.population2)
+    return `p = ${st.cumulativeStdNormalProbability(z)}`
+}
+
+const rankSumTestDescription = {   // at NCI Shady Grove
+    "name": "rankSumTest",
+    "description": "statistical test comparing two popuations for significant distribution difference",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "population1": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+            },
+            "population2": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+            }
+        }
+    }
+};
+
 /*
 async fetchUCSC = async function(pams){
     parms = parms|{
@@ -154,5 +188,7 @@ export{
     say_goodbye,
     weather_nci,
     fetchUCSC,
-    funFetchUCSC
+    funFetchUCSC,
+    rankSumTest,
+    rankSumTestDescription
 }
