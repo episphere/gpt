@@ -2,6 +2,8 @@
 // https://platform.openai.com/docs/api-reference/chat/create#chat/create-functions
 // https://openai.com/blog/function-calling-and-other-api-updates 
 
+import wilcoxon from 'https://cdn.jsdelivr.net/gh/stdlib-js/stats-wilcoxon@esm/index.mjs';
+
 const loaded=Date()
 
 async function weather_nci(when){
@@ -78,13 +80,16 @@ const fetchUCSC = {   // at NCI Shady Grove
 async function rankSumTest(parms){
     // lets do t-test to warm things up
     parms=parms||{
-        population1:[1,3,2,4,1,2,3,2,5,3],
-        population2:[3,4,5,3,4,2,3,5,4,6,7,4]
+        population1:[1.83, 0.5, 1.62, 2.48, 1.68, 1.88, 1.55, 3.06, 1.3],
+        population2:[0.878, 0.647, 0.598, 2.05, 1.06, 1.29, 1.06, 3.14, 1.29]
     }
     // get simple-statistics library
-    let st=await import('https://esm.sh/simple-statistics@7.8.3')
-    let z = st.tTestTwoSample(parms.population1,parms.population2)
-    return `the comparison of population [${parms.population1}] with [${parms.population2}] by a rank sum test assigns a p = ${st.cumulativeStdNormalProbability(z)} to the null hypothesis that they are similar`
+    // let st=await import('https://esm.sh/simple-statistics@7.8.3')
+    // let z = st.tTestTwoSample(parms.population1,parms.population2)
+    // return `the comparison of population [${parms.population1}] with [${parms.population2}] by a rank sum test assigns a p = ${st.cumulativeStdNormalProbability(z)} to the null hypothesis that they are similar`
+    let wcTest = wilcoxon(parms.population1,parms.population2)
+    wcTest.pValue
+    return `the comparison of population [${parms.population1}] with [${parms.population2}] by a rank sum test assigns a p = ${wcTest.pValue} to the null hypothesis that they are similar`
 }
 
 const rankSumTestDescription = {   // at NCI Shady Grove

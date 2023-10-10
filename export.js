@@ -6,6 +6,7 @@ console.log(`${location.href}export.js imported`)
 
 const hello=`hello GPT at ${Date()}`;
 import showdown from 'https://cdn.jsdelivr.net/npm/showdown@2.1.0/+esm'  // markdown>html
+//import wilcoxon from 'https://cdn.jsdelivr.net/gh/stdlib-js/stats-wilcoxon@esm/index.mjs';
 
 var key = null //'null'
 var models = null
