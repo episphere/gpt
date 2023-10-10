@@ -110,11 +110,7 @@ const rankSumTestDescription = {   // at NCI Shady Grove
 };
 
 export{
-    hello,
-    bye,
     weather,
-    say_hello,
-    say_goodbye,
     weather_nci,
     fetchUCSC,
     funFetchUCSC,
