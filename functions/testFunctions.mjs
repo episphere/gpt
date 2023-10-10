@@ -84,7 +84,7 @@ async function rankSumTest(parms){
     // get simple-statistics library
     let st=await import('https://esm.sh/simple-statistics@7.8.3')
     let z = st.tTestTwoSample(parms.population1,parms.population2)
-    return `p = ${st.cumulativeStdNormalProbability(z)}`
+    return `the comparison of population [${parms.population1}] with [${parms.population2}] by a rank sum test assigns a p = ${st.cumulativeStdNormalProbability(z)} to the null hypothesis that they are similar`
 }
 
 const rankSumTestDescription = {   // at NCI Shady Grove
