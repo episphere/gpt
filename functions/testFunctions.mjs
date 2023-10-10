@@ -89,7 +89,7 @@ async function rankSumTest(parms){
     // return `the comparison of population [${parms.population1}] with [${parms.population2}] by a rank sum test assigns a p = ${st.cumulativeStdNormalProbability(z)} to the null hypothesis that they are similar`
     let wcTest = wilcoxon(parms.population1,parms.population2)
     wcTest.pValue
-    return `the comparison of population [${parms.population1}] with [${parms.population2}] by a rank sum test assigns a p = ${wcTest.pValue} to the null hypothesis that they are similar`
+    return `the comparison of population [${parms.population1}] with [${parms.population2}] by Wilcoxon Rank Sum Test assigns a p = ${wcTest.pValue} to the null hypothesis that they are similar`
 }
 
 const rankSumTestDescription = {   // at NCI Shady Grove
