@@ -87,9 +87,13 @@ async function rankSumTest(parms){
     // let st=await import('https://esm.sh/simple-statistics@7.8.3')
     // let z = st.tTestTwoSample(parms.population1,parms.population2)
     // return `the comparison of population [${parms.population1}] with [${parms.population2}] by a rank sum test assigns a p = ${st.cumulativeStdNormalProbability(z)} to the null hypothesis that they are similar`
-    let wcTest = wilcoxon(parms.population1,parms.population2)
-    wcTest.pValue
-    return `the comparison of population [${parms.population1}] with [${parms.population2}] by Wilcoxon Rank Sum Test assigns a p = ${wcTest.pValue} to the null hypothesis that they are similar`
+    if(parms.population1.length!=parms.population2.length){
+        return `please compare populations of the same size`
+    }else{
+        let wcTest = wilcoxon(parms.population1,parms.population2)
+        wcTest.pValue
+        return `the comparison of population [${parms.population1}] with [${parms.population2}] by Wilcoxon Rank Sum Test assigns a p = ${wcTest.pValue} to the null hypothesis that they are similar`
+    }
 }
 
 const rankSumTestDescription = {   // at NCI Shady Grove
