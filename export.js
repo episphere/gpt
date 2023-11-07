@@ -143,6 +143,7 @@ async function listModels(){
         //let res = await fetch('https://api.openai.com/v1/models',{headers:{'Authorization':`Bearer ${key}`}})
         //let x = 44
     }
+    models.data=models.data.sort((a,b)=>(a.id>b.id?1:-1)) // sorting models alphabetically
     return models   
 }
 
