@@ -46,7 +46,7 @@ async function funFetchUCSC(parms){
     })
     console.log(url)
     let res = await (await fetch(url)).json()
-    return `The genomic sequence is ${res.dna.toUpperCase()}`
+    return `The genomic sequence in that position is ${res.dna.toUpperCase()}`
     //return JSON.stringify(res)
     //debugger
 }
