@@ -194,7 +194,7 @@ async function chatUI(div){ // cerate a simple chat div
     let selectRole=document.createElement('select')
     selectRole.id = "selectRole"
     div.appendChild(selectRole);
-    ['system','user','assistant'].forEach(r=>{
+    ['system','user','assistant','function'].forEach(r=>{
         let opt = document.createElement('option')
         selectRole.appendChild(opt)
         opt.value=r
@@ -329,6 +329,9 @@ async function chatUI(div){ // cerate a simple chat div
                     if(x.choices[0].finish_reason=="function_call"){
                         console.log(`function_call:`,x)
                         let msg=x.choices[0].message
+                        msg.role="function"
+                        msg.name=msg.function_call.name
+                        delete msg.function_call
                         msgs.push(msg)
                         // show result in the UI
                         // continue back to the loop

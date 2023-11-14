@@ -77,6 +77,30 @@ const fetchUCSC = {   // at NCI Shady Grove
     }
 };
 
+function funGCcontent(parms){
+    parms = parms||{
+        sequence:'AGAAGGAAAACGGGAAACTTCACAATTAGTGAATATTTAAAAACAGACTCTTAAGAAACCAAAGGATCAAGGAAGATACCACAGGGAAAAATAGAGAATA'
+    }
+    // calculate GC funGCcontent
+    let GClength = parms.sequence.toUpperCase().split('').filter(x=>(x=='G'|x=='C')).length
+    let seqLength = parms.sequence.length
+    return `GC content is ${GClength}/${seqLength} = ${GClength/seqLength}`
+}
+
+const defGCcontent={
+    "name": "funGCcontent",
+    "description": "calculate the GC content of a DNA sequence",
+    "parameters": {
+        "type":"object",
+        "properties":{
+            "sequence":{
+                "type":"string",
+                "description":"a DNA or genomic sequence, composed with four letters: A, C, G, and T"
+            }
+        }
+    }
+}
+
 async function rankSumTest(parms){
     // lets do t-test to warm things up
     parms=parms||{
@@ -124,5 +148,7 @@ export{
     fetchUCSC,
     funFetchUCSC,
     rankSumTest,
-    rankSumTestDescription
+    rankSumTestDescription,
+    funGCcontent,
+    defGCcontent
 }
