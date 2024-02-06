@@ -1,0 +1,13 @@
+{
+    "name": "funGCcontent",
+    "description": "calculate the GC content of a DNA sequence",
+    "parameters": {
+        "type":"object",
+        "properties":{
+            "sequence":{
+                "type":"string",
+                "description":"a DNA or genomic sequence, composed with four letters: A, C, G, and T"
+            }
+        }
+    }
+}
