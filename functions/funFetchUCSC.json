@@ -1,0 +1,30 @@
+{
+  "name": "funFetchUCSC",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "genome": {
+        "type": "string",
+        "description": "genome assembly defined as genome=hg<num>",
+        "enum": [
+          "hg38",
+          "hg37"
+        ]
+      },
+      "chrom": {
+        "type": "string",
+        "description": "chromosome number or letter, typically chr<num>"
+      },
+      "start": {
+        "type": "integer",
+        "description": "starting position in the chromossome, use 100000 as the default value"
+      },
+      "end": {
+        "type": "integer",
+        "description": "end position in the chromossome, use 100100 as the default value"
+      }
+    },
+    "required": []
+  },
+  "description": "get the sequence of the human genome at chromosome position, from start to end of segment"
+}
