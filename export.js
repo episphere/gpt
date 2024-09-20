@@ -44,9 +44,9 @@ async function check4key(k){
 }
 
 //async function completions(content='Say this is a test!',model='gpt-3.5-turbo',role='user',temperature=0.7){
-async function completions(content='Say this is a test!',model='gpt-3.5-turbo-16k-0613',role='user',temperature=0.7,functionsImport){
+async function completions(content='Say this is a test!',model='gpt-4o',role='user',temperature=0.7,functionsImport){
     if(!model){
-        model='gpt-3.5-turbo-16k-0613'
+        model='gpt-4o'
     }
     if(!role){
         role='user'
