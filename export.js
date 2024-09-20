@@ -147,7 +147,7 @@ async function listModels(){
     return models   
 }
 
-async function retrieveModel(model='gpt-3.5-turbo-16k-0613'){
+async function retrieveModel(model='gpt-4o'){
     return await (await fetch(`https://api.openai.com/v1/models/${model}`,{headers:{'Authorization':`Bearer ${key}`}})).json()
 }
 
@@ -188,7 +188,7 @@ async function chatUI(div){ // cerate a simple chat div
         opt.value=m.id
         opt.textContent=m.id
     })
-    selectModel.value='gpt-3.5-turbo-16k-0613'
+    selectModel.value='gpt-4o'
     div.appendChild(selectModel)
     // select role
     let selectRole=document.createElement('select')
